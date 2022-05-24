@@ -1,0 +1,122 @@
+{{user|json}}
+<div class="row mt-5 mb-5" *ngIf="user.name != undefined">
+    <div class="col-md-6 m-auto">
+        <p class="text-danger" *ngIf="duplicateError">{{message}}</p>
+        <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Name</label>
+                <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="name" formControlName="name">
+                {{editForm.get('name').touched}}
+                <ng-container *ngIf="(editForm.get('name').touched || editForm.submitted) && !editForm.get('name').valid">
+                    <p class="text-danger" *ngIf="editForm.get('name').errors && editForm.get('name').errors['required']">This field is required</p>
+                  </ng-container>
+              </div>
+            <div class="mb-3">
+              <label for="exampleInputEmail1" class="form-label">Email address</label>
+              <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email" formControlName="email">
+              <ng-container *ngIf="(editForm.get('email').touched || editForm.submitted) && !editForm.get('email').valid">
+                <p class="text-danger" *ngIf="editForm.get('email').errors && editForm.get('email').errors['required']">This field is required</p>
+                <p class="text-danger" *ngIf="editForm.get('email').errors && editForm.get('email').errors['email']">Please provide valid email</p>
+              </ng-container>
+            </div>
+            <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label">Password</label>
+              <input type="password" class="form-control" id="exampleInputPassword1" name="password" formControlName="password">
+              <ng-container *ngIf="(editForm.get('password').touched || editForm.submitted) && !editForm.get('password').valid">
+                <p class="text-danger" *ngIf="editForm.get('password').errors && editForm.get('password').errors['required']">This field is required</p>
+                <p class="text-danger" *ngIf="editForm.get('password').errors && editForm.get('password').errors['minlength']">Please privode minimum to chars</p>
+              </ng-container>
+            </div>
+
+            <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Gender</label><br/>
+                <input type="radio" name="gender" value="m" formControlName="gender">Male
+                <input type="radio" name="gender" value="f" formControlName="gender">Female
+            </div>
+
+              <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Phone</label>
+                <input type="text" class="form-control" id="exampleInputPassword1" name="phone" formControlName="phone">
+              </div>
+
+              <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Country</label>
+                <select name="country" class="form-select" formControlName="country">
+                    <option value="">Select country</option>
+                    <option *ngFor="let country of countries" value="{{country.id}}">{{country.country}}</option>
+                </select>
+              </div>
+
+              <ng-container formGroupName="address">
+                <div class="mb-3">
+                  <label for="exampleInputPassword1" class="form-label">City</label>
+                  <input type="text" class="form-control" id="exampleInputPassword1" name="city" formControlName="city">
+                  <ng-container *ngIf="(editForm.get('address').get('city').touched || editForm.submitted) && !editForm.get('address').get('city').valid">
+                    <p class="text-danger" *ngIf="editForm.get('address').get('city').errors && editForm.get('address').get('city').errors['required']">This field is required</p>
+                  </ng-container>
+                </div>
+  
+                <div class="mb-3">
+                  <label for="exampleInputPassword1" class="form-label">Pin</label>
+                  <input type="text" class="form-control" id="exampleInputPassword1" name="pin" formControlName="pin">
+                </div>
+              </ng-container>
+
+              <button type="button" (click)="addSkill()" class="btn btn-primary">Add</button>
+              <ng-container formArrayName="skills">
+                <ng-container *ngFor="let skill of skills().controls; let i=index">
+                  <ng-container [formGroupName]="i">
+                    <div class="row">
+                      <div class="mb-3 col-md-5">
+                        <label for="exampleInputPassword1" class="form-label">Skill</label>
+                        <input type="text" class="form-control" id="exampleInputPassword1" name="subject" formControlName="subject">
+                        <ng-container *ngIf="(skill.get('subject')?.touched || editForm.submitted) && !skill.get('subject')?.valid">
+                          <p class="text-danger" *ngIf="skill.get('subject')?.errors && editForm.get('skills').get(i.toString()).get('subject').errors['required']">This field is required</p>
+                        </ng-container>
+                      </div>
+  
+                      <div class="mb-3 col-md-5">
+                        <label for="exampleInputPassword1" class="form-label">Exp</label>
+                        <input type="text" class="form-control" id="exampleInputPassword1" name="exp" formControlName="exp">
+                        <ng-container *ngIf="(skill.get('exp')?.touched || editForm.submitted) && !skill.get('exp')?.valid">
+                          <p class="text-danger" *ngIf="skill.get('exp')?.errors && editForm.get('skills').get(i.toString()).get('exp').errors['required']">This field is required</p>
+                        </ng-container>
+                      </div>
+                      <div class="mb-3 pt-4 mt-2 col-md-2">
+                        <button type="button" class="btn btn-primary" [disabled]="skills().controls.length == 1" (click)="removeSkill(i)">Delete</button>
+                      </div>
+                    </div>
+                  </ng-container>
+
+                  {{skill.get('skill')?.value}}
+                </ng-container>
+              </ng-container>
+
+              <!-- <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Type of url</label><br/>
+                <input type="radio" name="uu" value="url" formControlName="uu" (click)="urlType('url')">URL
+                <input type="radio" name="uu" value="profile" formControlName="uu" (click)="urlType('profile')">Profile
+            </div>
+
+              <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">url</label>
+                <input type="text" class="form-control" id="exampleInputPassword1" name="url" formControlName="url">
+                <ng-container *ngIf="!editForm.get('url').valid">
+                  <p class="text-danger" *ngIf="(editForm.get('url').touched || editForm.submitted) && editForm.get('url').errors && editForm.get('url').errors['urlValid'] && !editForm.get('url').errors['required'] && editForm.get('url').value.length > 0">Url is not valid</p>
+                  <p class="text-danger" *ngIf="editForm.get('url').errors && editForm.get('url').errors['required']">Url is required</p>
+                </ng-container>
+              </div>
+              <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Profile</label>
+                <input type="text" class="form-control" id="exampleInputPassword1" name="url" formControlName="profile">
+                <ng-container *ngIf="!editForm.get('profile').valid">
+                  <p class="text-danger" *ngIf="(editForm.get('profile').touched || editForm.submitted) && editForm.get('profile').errors && editForm.get('profile').errors['urlValid'] && !editForm.get('profile').errors['required']">Url is not valid</p>
+                  <p class="text-danger" *ngIf="editForm.get('profile').errors && editForm.get('profile').errors['required']">Profile is required</p>
+                </ng-container>
+              </div> -->
+              <!-- {{editForm.value|json}} -->
+              <br/> <br/>
+            <button type="submit" class="btn btn-primary" [disabled]="!editForm.valid">Submit</button>
+        </form>
+    </div>
+</div>

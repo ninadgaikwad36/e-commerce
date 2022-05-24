@@ -1,0 +1,53 @@
+<div class="row mt-5 mb-5">
+    <div class="col-md-6 m-auto">
+        <form #registerForm="ngForm" (ngSubmit)="registerData(registerForm)">
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Name</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="name" ngModel #nameControl="ngModel" required>
+                <ng-container *ngIf="(nameControl.touched || registerForm.submitted) && !nameControl.valid">
+                  <p class="text-warning" *ngIf="nameControl.errors && nameControl.errors['required']">This field is required</p>
+                </ng-container>
+                
+              </div>
+            <div class="mb-3">
+              <label for="exampleInputEmail1" class="form-label">Email address</label>
+              <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email" ngModel #emailControl="ngModel" [required]="cpControl.value == 'email'" email acceptOnlyGmail>
+              <ng-container *ngIf="(emailControl.touched || showError || registerForm.submitted) && !emailControl.valid">
+                  {{emailControl.errors|json}}
+                <p class="text-warning" *ngIf="emailControl.errors && emailControl.errors['required']">This field is required</p>
+                <p class="text-warning" *ngIf="emailControl.errors && emailControl.errors['email']">Please provide valid email</p>
+                <p class="text-warning" *ngIf="emailControl.errors && emailControl.errors['acceptOnlyGmail'] && !emailControl.errors['email']">Email should contain gmail</p>
+              </ng-container>
+              
+            </div>
+            <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label">Password</label>
+              <input type="password" class="form-control" id="exampleInputPassword1" name="pasword" ngModel #password="ngModel" required minlength="6">
+              <ng-container *ngIf="(password.touched || registerForm.submitted) && !password.valid">
+                <p class="text-warning" *ngIf="password.errors && password.errors['required']">This field is required</p>
+                <p class="text-warning" *ngIf="password.errors && password.errors['minlength']">Password should more that 6 characters</p>
+              </ng-container>
+            </div>
+
+            <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Contact preference</label><br/>
+                <input type="radio" name="cp" ngModel #cpControl="ngModel" required value="email" (click)="cpClicked()">Email
+                <input type="radio" name="cp" ngModel #cpControl="ngModel" required value="phone" (click)="cpClicked()">Phone
+                <ng-container *ngIf="(cpControl.touched || registerForm.submitted) && !cpControl.valid">
+                  <p class="text-warning" *ngIf="cpControl.errors && cpControl.errors['required']">This field is required</p>
+                </ng-container>
+            </div>
+
+            <div class="mb-3" [ngClass]="{'border': cpControl.value === 'phone', 'new-border' : test }" [ngStyle]="{'color': (cpControl.value == 'phone') ? 'red' : 'black' }">
+                <label for="exampleInputPassword1" class="form-label">Phone</label>
+                <input type="text" class="form-control" id="exampleInputPassword1" name="phone" ngModel #phoneControl="ngModel" [required]="cpControl.value == 'phone'" minlength="10">
+                <ng-container *ngIf="(phoneControl.touched || showError || registerForm.submitted) && !phoneControl.valid">
+                  <p class="text-warning" *ngIf="phoneControl.errors && phoneControl.errors['required']">This field is required</p>
+                  <p class="text-warning" *ngIf="phoneControl.errors && phoneControl.errors['minlength']">Password should more that 10 characters</p>
+                </ng-container>
+            </div>
+           
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>

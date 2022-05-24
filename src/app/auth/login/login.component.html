@@ -1,0 +1,31 @@
+<div class="row mt-5 mb-5">
+    <div class="col-md-6 m-auto">
+        <form #loginForm="ngForm" (ngSubmit)="loginData(loginForm)">
+          <p class="text-warning" *ngIf="userNamePassError">Username and password does not match</p>
+            <div class="mb-3">
+              <label for="exampleInputEmail1" class="form-label">Email address</label>
+              <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="username" ngModel #emailControl="ngModel" required email>
+              {{emailControl.touched}}
+              {{emailControl.valid}}
+              <ng-container *ngIf="(emailControl.touched || loginForm.submitted) && !emailControl.valid">
+                <p class="text-warning" *ngIf="emailControl.errors && emailControl.errors['required']">This field is required</p>
+                <p class="text-warning" *ngIf="emailControl.errors && emailControl.errors['email']">Please provide valid email</p>
+              </ng-container>
+              
+            </div>
+            <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label">Password</label>
+              <input type="password" class="form-control" id="exampleInputPassword1" name="pasword" ngModel #password="ngModel" required minlength="2">
+              <ng-container *ngIf="(password.touched || loginForm.submitted) && !password.valid">
+                <p class="text-warning" *ngIf="password.errors && password.errors['required']">This field is required</p>
+                <p class="text-warning" *ngIf="password.errors && password.errors['minlength']">Password should more that 6 characters</p>
+              </ng-container>
+            </div>
+            <!-- <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="exampleCheck1">
+              <label class="form-check-label" for="exampleCheck1">Check me out</label>
+            </div> -->
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
